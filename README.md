@@ -180,3 +180,61 @@ class Solution:
         return max_common_str
 ```
 此解法时间复杂度是O(N^2)，目前我想不到更好的解法。。但是leetcode能通过
+
+## Valid Parentheses
+
+题目:[Valid Parentheses](https://leetcode.com/problems/valid-parentheses/description/)
+
+>Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+>The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+
+
+题意分析:
+判断一个只有字符'(', ')', '{', '}', '[' 和 ']'的字符串，并且每对括号都需要正确的关闭，也就是说括号需要成对出现
+
+###  思路分析
+判断成对出现的东西，我们很容易想到栈（先进后出）这种数据结构。
+
+括号亦是如此，如果出现左括号，我们就将其入栈，当在出现了右括号，我们在将其出栈，如果最后的栈为空，即括号刚好是成对出现的。
+
+但我们还需要判断三种括号之间的对应关系（即左小括号对应右小括号等），为了实现这种需求，在python里可以使用字典(java里可以使用map)存储对应关系。
+
+循环字符串时，如果当前字符为左字符串，则向栈(列表/数组)尾部加上这个字符，如果不等于左括号，则判断此时栈是否为空或者当前的右括号字符在字典中所对应的左括号是否等于出栈的元素，如果不相等，则返回false
+
+循环完毕还需要判断栈是否为空，如果为空，则返回true，反之，返回false
+
+所以我们可以有以下解法
+#### 方法一
+```python
+lass Solution:
+    def isValid(self, s):
+        '''
+        :param s: str
+        :return: bool
+        '''
+        left_char = '({['
+        mp = {
+            ')': '(',
+            ']': '[',
+            '}': '{'
+        }
+        # 初始化一个空列表作为栈
+        stack = []
+        # 循环遍历字符串
+        for i in s:
+            # 如果字符是左括号就入栈
+            if i in left_char:
+                stack.append(i)
+            else:
+                # 如果也想加上对其他字符串匹配
+                # if i in mp.keys():
+                    # 栈为空或者传入的右括号不等于栈尾的左括号，即不符合条件
+                if not stack or mp[i] != stack.pop():
+                    return False
+        # 判断栈是否为空，为空即成立
+        if not stack:
+            return True
+        return False
+```
+用列表来替代模拟栈，时间复杂度为O(N)，顺利通过leetcode检测
