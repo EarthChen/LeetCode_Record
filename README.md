@@ -207,7 +207,7 @@ class Solution:
 所以我们可以有以下解法
 #### 方法一
 ```python
-lass Solution:
+class Solution:
     def isValid(self, s):
         '''
         :param s: str
@@ -238,3 +238,108 @@ lass Solution:
         return False
 ```
 用列表来替代模拟栈，时间复杂度为O(N)，顺利通过leetcode检测
+
+
+## Merge Two Sorted Lists
+
+题目:[Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/description/)
+
+>Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+
+
+题意分析:
+将两个已排序的链表合并，并返回一个新的链表，新链表应该是由两个链表中的结点拼接起来的
+
+###  思路分析
+想要拼接链表，首先需要知道这个结点是什么样的结构，很容易想到，python中的单链表的结点应该如下所示:
+```python
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+```
+当然题中也给出了这个结构。有了这个结构，就能知道我们需要得到结点的值才能进行比较。
+
+又由于题目要求我们使用其中的一个结点将两个链表拼接起来，换句话说，就是将一个链表合并到另一个链表上，所以并不能创建一个新链表去进行操作。
+
+当其中某一个链表为空时，只需要返回另一个链表即可，这种情况需要单独讨论
+
+当两个链表均不为空时，我们需要去比较结点两个链表中结点的大小，当l1的结点值小于l2的结点时，我们就需要将l2合并到l1上，把l2的结点一个一个拼到l1上，知道l2为为空时，循环就可以结束了。这个过程是重复的，所以我们这里可以使用递归操作，反之，当l2的结点小于l1时，就把l1拼接到l2上
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def mergeTwoLists(self, l1, l2):
+        '''
+        :param l1: ListNode
+        :param l2: ListNode
+        :return: ListNode
+        '''
+        # 如果l1或l2有一个为空，则返回另一个
+        if not l1 or not l2:
+            return l1 or l2
+        # 比较l1和l2的值的大小
+        if l1.val < l2.val:
+            # 将l2递归到l1上
+            l1.next = self.mergeTwoLists(l1.next, l2)
+            return l1
+        else:
+            # 将l1递归到l2上
+            l2.next = self.mergeTwoLists(l2.next, l1)
+            return l2
+```
+用了递归的方式，减少了我们需要处理的循环等等
+
+## Remove Duplicates from Sorted Array
+
+题目:[Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/)
+
+>Given a sorted array, remove the duplicates in place such that each element appear only once and return the new length.
+
+>Do not allocate extra space for another array, you must do this in place with constant memory.
+
+例子:
+>Given input array nums = [1,1,2]
+>Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively. It doesn't matter what you leave beyond the new length
+
+题意分析:
+去除有序数组中的重复元素，并返回去重之后的数组的长度
+
+###  思路分析
+由于我使用的是python，我首先想到的是用set集合去重，然后用len计算长度，立马兴奋的写下一行代码
+```python
+len(set(nums))
+```
+然而在这里会报错，所以只能考虑其他的办法。
+
+还很容易想到的是用一个列表，字典之类的将我们遍历过的元素存起来，然后在用之后的元素与之比较，查看是否存在，存在就忽略，最后计算字典或者列表中元素的数量就能得到我们所需要的长度，但是同样与题目要求不符，题目要求不能使用分配额外的空间去解决。所以还得想别的办法
+
+首先，数组或列表为空时，返回0，这个需要单独讨论，遍历这个列表是必须的。
+
+我们可以假设新列表的长度为0，然后我们就能同时得到列表中第一个元素的值，在循环中我们可以用下一个与之比较，如果不一样，就将假设的新列表的长度+1，同时，由于有元素不一样，我们需要将新元素赋给之前相同的元素，也就是索引为新列表长度的元素，由于是排序的列表，我们不用担心，在未遍历的元素中还有之前已经遍历过的相同的元素。就这样从第二个开始遍历到最后一个，就能得到新列表的长度，但是由于我们是新列表的长度初始设为0，遍历又是从1开始，所以这个列表的长度最终应该+1
+
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def removeDuplicates(self, nums):
+        '''
+        :param nums: list[int]
+        :return:int
+        '''
+        # 如果数组为空，则返回0
+        if not nums:
+            return 0
+        new_length = 0
+        length = len(nums)
+        # 从1到n-1开始循环遍历
+        for i in range(1, length):
+            # 如果i不等于nums[now_length](其实是i-1)
+            if nums[i] != nums[new_length]:
+                new_length += 1
+                nums[new_length] = nums[i]
+        return new_length + 1
+```
+这样我们就可以不用额外的空间，并且时间复杂度只有O(N-1)
