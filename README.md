@@ -379,3 +379,90 @@ class Solution:
         return length, nums
 ```
 这样我们就可以不用额外的空间，时间复杂度为O(N)
+
+
+## Maximum Subarray
+
+题目:[Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
+
+>https://leetcode.com/problems/maximum-subarray/description/
+
+例子:
+```text
+given the array [-2,1,-3,4,-1,2,1,-5,4],
+the contiguous subarray [4,-1,2,1] has the largest sum = 6
+```
+
+题意分析:
+求出一个整形列表中几个连续元素的和
+
+###  思路分析
+想要得到和，首先我们肯定要求和，想知道若干个元素的和，还得求出最大的和，意味着我们肯定要循环。
+
+方法一:
+很容易想到我们可以先先计算一个元素的和，然后循环得到这个元素与后续所有元素的和，并求出其中的最大值，这很简单，只需要当和大于假定的最大值时，更新最大值即可。这就得到了以一个元素开始与后续子元素其中的最大值。
+
+想要得到整个列表中哪几个连续元素的和最大，我们还需要对所有元素进行循环，也就是在内循环以某个元素开始的最大值，在外循环得到以所有元素的最大值。
+
+因为方法一的进行了两次循环，时间复杂度较高，为此我们需要想办法进行一次循环就得到我们需要的值。
+
+方法二：
+要达到目的，循环肯定少不了，既然我们不需要得到是哪几个元素的和最大，我们也就没必要进行两此循环，来得到是从那个索引开始到那个索引结束。
+
+首先，我们声明两个变量，一个为循环当前的最大值，一个为我们需要的最大值，初始都将他们赋为列表的第一个元素（需要对为列表单独讨论）。
+
+我们不需要得到元素列表，所以直接迭代列表元素即可，计算当前元素与当前的最大值+当前元素的和，并将他们俩之间的最大值赋值给当前最大值。
+
+然后再将当前最大值与需要的最大值进行比较，把其中的最大值赋值给需要的最大值。循环结束就能得到我们需要的。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def maxSubArray(self, nums):
+        """
+        计算列表中连续子数组的最大和
+        :param nums: list[int]
+        :return: int
+        """
+        start = 0
+        stop = 0
+        length = len(nums)
+        if length == 1:
+            return sum(nums)
+        largest_sum = nums[0]
+        for i in range(0, length):
+            max_sum = nums[0]
+            for j in range(i, length):
+                ij_sum = sum(nums[i: j + 1])
+                if ij_sum > max_sum:
+                    stop = j
+                    max_sum = ij_sum
+            if max_sum > largest_sum:
+                start = i
+                largest_sum = max_sum
+        return largest_sum
+```
+时间复杂度较高为O(N^2),但可以得到最大和的元素列表
+
+#### 方法二
+```python
+class Solution:
+    def maxSubArray(self, nums):
+        """
+        计算列表中连续子数组的最大和
+        :param nums: list[int]
+        :return: int
+        """
+        if not nums:
+            return 0
+        cur_sum = nums[0]
+        max_sum = nums[0]
+        for i in nums[1:]:
+            # 计算当前的和与i相加之后的和比较的最大值
+            cur_sum = max(i, cur_sum + i)
+            # 计算当前和与最大和比较的最大值
+            max_sum = max(max_sum, cur_sum)
+        return max_sum
+```
+一次循环，时间复杂度为O(N)，不能轻易得到元素列表
