@@ -13,12 +13,16 @@
 
 class Solution:
     def searchInsert(self, nums, target):
+        # 判断是否在列表中
         if target in nums:
+            # 存在即返回索引
             return nums.index(target)
         else:
             for i in range(len(nums)):
+                # 当第一次大于目标值时就返回当前索引
                 if nums[i] > target:
                     return i
+            # 如果列表中灭有大于目标值的返回列表的长度
             return len(nums)
 
 
