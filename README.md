@@ -385,7 +385,7 @@ class Solution:
 
 题目:[Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
 
->https://leetcode.com/problems/maximum-subarray/description/
+>Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
 
 例子:
 ```text
@@ -466,3 +466,76 @@ class Solution:
         return max_sum
 ```
 一次循环，时间复杂度为O(N)，不能轻易得到元素列表
+
+## Count and Say
+
+题目:[Count and Say](https://leetcode.com/problems/count-and-say/description/)
+
+>The count-and-say sequence is the sequence of integers with the first five terms as following:
+```text
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+```
+>1 is read off as "one 1" or 11.
+>11 is read off as "two 1s" or 21.
+>21 is read off as "one 2, then one 1" or 1211.
+>Given an integer n, generate the nth term of the count-and-say sequence.
+
+例子:
+```text
+Input: 1
+Output: "1"
+
+Input: 4
+Output: "1211"
+```
+
+题意分析:
+第n次结果是对n-1次结果的解释。例如第4次的结果为1211，参照第3次结果，可以解释为一个2，一个1，就形成了1211，一次类推
+
+###  思路分析
+在我们掌握了规律之后，我们发现下一次的结果总由上一次的结果所决定，很容易想到可以用递归处理，如果采用递归，当然我们也需要知道结束标志，不然就会一直死循环下去了，这里很明显，结束标志就是当n为1或者0时，分别返回1或者空。
+
+当需要求第n次结果时，我们可以获取递归调用第n-1次的结果进行处理，对上一次计算结果进行处理，这里就是对上一次计算结果解释。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def countAndSay(self, n):
+        """
+
+        :param n: int
+        :return: str
+        """
+        if n == 0:
+            return ''
+        if n == 1:
+            return '1'
+        # 得到上一次的结果
+        n1_str = self.countAndSay(n - 1)
+        # 末尾字符赋值为上一次结果的第一个字符
+        last = n1_str[0]
+        cnt = 1
+        n_str = ''
+        # 从索引1开始迭代
+        for i in range(1, len(n1_str)):
+            # 如果当前元素等于初始末尾字符(上一次结果的第一个字符)
+            if n1_str[i] == last:
+                cnt += 1
+            else:
+                n_str = n_str + str(cnt)
+                n_str = n_str + last
+                # 将数量重置为1
+                cnt = 1
+                last = n1_str[i]
+        n_str = n_str + str(cnt)
+        n_str = n_str + last
+        return n_str
+```
+这样就用递归的方式很简单的得到了结果。
+
+当然我们也可以用求下一次结果的方式，只需要执行n-1次即可。
