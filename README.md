@@ -539,3 +539,44 @@ class Solution:
 这样就用递归的方式很简单的得到了结果。
 
 当然我们也可以用求下一次结果的方式，只需要执行n-1次即可。
+
+## Count and Say
+
+题目:[Length of Last Word](https://leetcode.com/problems/length-of-last-word/description/)
+
+>Given a string s consists of upper/lower-case alphabets and empty space characters ' ', return the length of last word in the string.
+>If the last word does not exist, return 0.
+>Note: A word is defined as a character sequence consists of non-space characters only.
+
+
+例子:
+```text
+Given s = "Hello World",
+return 5.
+```
+
+题意分析:
+题目要求我们求字符串中最后一个单词的长度，并且这个字符串每个单词之间是由空格连接，当最后一个单词不存在时，返回0。
+
+###  思路分析
+这道题目可以说非常简单了，唯一的混淆点就是对空格的处理，当末尾有空格时，中间有空格时，处理都会变的麻烦。
+
+但是题目已经说明末尾的空格并不计算，所以我们可以首先将前后的空格去掉，然后根据单词分割符空格将字符串进行切割，然后取最后一部分计算长度即可。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def lengthOfLastWord(self, s):
+        """
+        返回字符串中最后一个单词的长度
+        :param s: str
+        :return: int
+        """
+        # 先去掉首尾的空格
+        # 在按空格切割字符串转换为列表
+        # 取列表最后一个元素计算长度
+        return len(s.strip().split(' ')[-1])
+```
+代码非常短，只需要一行就可以解决。效率也是很高的
+
