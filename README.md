@@ -542,7 +542,81 @@ class Solution:
 
 ## Count and Say
 
-题目:[Length of Last Word](https://leetcode.com/problems/length-of-last-word/description/)
+题目:[Count and Say](https://leetcode.com/problems/count-and-say/description/)
+
+>The count-and-say sequence is the sequence of integers with the first five terms as following:
+```text
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+```
+>1 is read off as "one 1" or 11.
+>11 is read off as "two 1s" or 21.
+>21 is read off as "one 2, then one 1" or 1211.
+>Given an integer n, generate the nth term of the count-and-say sequence.
+
+例子:
+```text
+Input: 1
+Output: "1"
+
+Input: 4
+Output: "1211"
+```
+
+题意分析:
+第n次结果是对n-1次结果的解释。例如第4次的结果为1211，参照第3次结果，可以解释为一个2，一个1，就形成了1211，一次类推
+
+###  思路分析
+在我们掌握了规律之后，我们发现下一次的结果总由上一次的结果所决定，很容易想到可以用递归处理，如果采用递归，当然我们也需要知道结束标志，不然就会一直死循环下去了，这里很明显，结束标志就是当n为1或者0时，分别返回1或者空。
+
+当需要求第n次结果时，我们可以获取递归调用第n-1次的结果进行处理，对上一次计算结果进行处理，这里就是对上一次计算结果解释。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def countAndSay(self, n):
+        """
+
+        :param n: int
+        :return: str
+        """
+        if n == 0:
+            return ''
+        if n == 1:
+            return '1'
+        # 得到上一次的结果
+        n1_str = self.countAndSay(n - 1)
+        # 末尾字符赋值为上一次结果的第一个字符
+        last = n1_str[0]
+        cnt = 1
+        n_str = ''
+        # 从索引1开始迭代
+        for i in range(1, len(n1_str)):
+            # 如果当前元素等于初始末尾字符(上一次结果的第一个字符)
+            if n1_str[i] == last:
+                cnt += 1
+            else:
+                n_str = n_str + str(cnt)
+                n_str = n_str + last
+                # 将数量重置为1
+                cnt = 1
+                last = n1_str[i]
+        n_str = n_str + str(cnt)
+        n_str = n_str + last
+        return n_str
+```
+这样就用递归的方式很简单的得到了结果。
+
+当然我们也可以用求下一次结果的方式，只需要执行n-1次即可。
+
+
+## Count and Say
+
+题目:[Count and Say](https://leetcode.com/problems/count-and-cay/description/)
 
 >Given a string s consists of upper/lower-case alphabets and empty space characters ' ', return the length of last word in the string.
 >If the last word does not exist, return 0.
@@ -579,4 +653,89 @@ class Solution:
         return len(s.strip().split(' ')[-1])
 ```
 代码非常短，只需要一行就可以解决。效率也是很高的
+
+
+## Add Binary
+
+题目:[Add Binary](https://leetcode.com/problems/add-binary/description/)
+
+>Given two binary strings, return their sum (also a binary string).
+
+
+例子:
+```text
+a = "11"
+b = "1"
+Return "100".
+```
+
+题意分析:
+题目很好理解，只是个二进制加法。
+
+###  思路分析
+既然要求二进制加法，我们可以利用计算机内部的实现来直接求得结果，但是这样对大部分人来说比较困难。
+
+我们还可以先将二进制转为10进制，然后就可以直接用+号直接加了，理解起来非常简单，然后得出结果后在将其转为2进制即可。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def addBinary(self, a, b):
+        """
+        二进制加法
+        :param a:
+        :param b:
+        :return:
+        """
+        a, b = int(a, 2), int(b, 2)
+        # 由于bin()方法转为的二进制会有0b前缀，所有我们需要用字符串切到2之后
+        return bin(a+b)[2:]
+```
+
+
+## Sqrt(x)
+
+题目:[Sqrt(x)](https://leetcode.com/problems/sqrtx/description/)
+
+>Implement int sqrt(int x).
+>Compute and return the square root of x.
+
+题意分析:
+这题考sqrt()方法的实现，也就是求平方根
+
+###  思路分析
+求平方根，其实是个数学问题，我们可以想一下在数学里面是如何处理的。
+
+但作为编程题，其实我们可以调用标准库中的sqrt()函数直接得出结果，我们也可以去查看其中的源码。
+
+还可以去求0.5次方的结果。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def mySqrt(self, x):
+        """
+        计算平方根
+        :param x: int
+        :return: int
+        """
+        import math
+        return int(math.sqrt(x))
+```
+调用math库中的sqrt函数，虽然在这里也能通过，但是我觉得有点不符合题意
+
+#### 方法一
+```python
+class Solution:
+        def mySqrt(self, x):
+        """
+        计算平方根
+        :param x: int
+        :return: int
+        """
+        return int(x ** 0.5)
+```
+这种方法使用的是求0.5次方。
 
