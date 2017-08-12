@@ -739,3 +739,38 @@ class Solution:
 ```
 这种方法使用的是求0.5次方。
 
+
+## Climbing Stairs
+
+题目:[Climbing Stairs](https://leetcode.com/problems/climbing-stairs/description/)
+
+>You are climbing a stair case. It takes n steps to reach to the top.
+>Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+>Note: Given n will be a positive integer.
+
+
+题意分析:
+题目相当于a到b点有n步，你每次可以选择走一步或两步，求可以有多少种方式可以走到终点
+
+###  思路分析
+这题，笔者最开始把题目抽象成了x+2y=n这个方程，然后去找有多少组整数解了，后来一想，发现并不是这样，因为上面那个方程只计算了走一步和走两步的次数，并没有考虑先后的顺序，思路就断了。
+
+然后笔者在纸上，分别列举了当n=1,2,3,4...时的结果数，发现了一个规律，每一次的结果等于上一次+上上次的结果的和，类似与斐波那契数列。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def climbStairs(self, n):
+        """
+
+        :param n: int
+        :return: int
+        """
+        a = b = 1
+        for i in range(n):
+            a, b = b, a + b
+        return a
+```
+虽然笔者也不知道结果为什么，希望有读者能从数学上给我解释下。
+
