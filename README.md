@@ -774,3 +774,134 @@ class Solution:
 ```
 虽然笔者也不知道结果为什么，希望有读者能从数学上给我解释下。
 
+## Remove Duplicates from Sorted List
+
+题目:[Remove Duplicates from Sorted List](https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/)
+
+>Given a sorted linked list, delete all duplicates such that each element appear only once.
+
+例子:
+```text
+Given 1->1->2, return 1->2.
+Given 1->1->2->3->3, return 1->2->3.
+```
+
+
+题意分析:
+在一个已排序的单链表中，删除所有重复的元素，每个元素只能保留一个
+
+###  思路分析
+为了删除重复元素，我们需要遍历整个单链表，又由于我们不知道循环的次数，只知道结束条件为结点为空，所以我们需要使用while循环，
+
+在循环中我们还需要嵌套一层while循环，判断当前结点的下一个结点是否存在并且下一个结点的值是否等于下下个结点的值，如果等于就将下下个结点赋值给当前结点的下一个结点。这部的作用其实就是将重复的元素都跳过。
+
+在外循环中将当前结点的下一个结点赋值给当前结点，最后返回单链表的头结点即可。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def deleteDuplicates(self, head):
+        """
+        有序单链表去重
+        :param head: ListNode
+        :return: ListNode
+        """
+        current = head
+        # 如果当前结点不为空
+        while current:
+            # 如果当前结点的下一个结点存在
+            # 并且当前结点的值等于下一个结点的值
+            while current.next and current.val == current.next.val:
+                # 当前结点的下一个结点等于当前结点的下下个结点
+                current.next = current.next.next
+            # 再降当前结点的下一个结点赋值给当前结点
+            current = current.next
+        # 返回已经去重的单链表
+        return head
+```
+
+## Merge Sorted Array
+
+题目:[Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/description/)
+
+>Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array.
+
+>Note:You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold additional elements from nums2. The number of elements initialized in nums1 and nums2 are m and n respectively.
+
+
+题意分析:
+给定两个已排序的整形列表nums1和nums2，将nums2合并到nums1上作用一个排序的列表。
+
+###  思路分析
+如果m>0 n>0时，如果nums1的m - 1一个元素的值大于等于nums2的n - 1个元素值则我们需要把nums1的m-1的值赋值给nums[m+n-1],然后将m减一即可，否则需要将nums2的n-1的值赋值给nums1[m-n-1],然后将n减一。
+
+如果只有n大于0，则只需把nums2的前n项赋值给nums1的前n项
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def merge(self, nums1, m, nums2, n):
+        """
+        将列表nums2合并到nums1上
+        :param nums1: list[int]
+        :param m: int
+        :param nums2: list[int]
+        :param n: int
+        :return: void
+        """
+        while m > 0 and n > 0:
+            if nums1[m - 1] >= nums2[n - 1]:
+                nums1[m + n - 1] = nums1[m - 1]
+                m -= 1
+            else:
+                nums1[m - n - 1] = nums2[n - 1]
+                n -= 1
+        if n > 0:
+            nums1[:n] = nums2[:n]
+```
+
+
+## Same Tree
+
+题目:[Same Tree](https://leetcode.com/problems/same-tree/description/)
+
+>Given two binary trees, write a function to check if they are equal or not.
+>Two binary trees are considered equal if they are structurally identical and the nodes have the same value.
+
+
+题意分析:
+让我们判断两个二叉树是否相同，相同的标准只需要各位置上的元素值相等即可
+
+###  思路分析
+想要判断各个结点上的值是否相等，我们需要去遍历整棵树。
+
+在二叉树方面，我们一般使用递归的方法去遍历，先判断当前结点是否为空，如果不为空，可以在遍历的过程中不断的比较每个结点上的元素的值。如果当前结点的值也相同，我们需要同时比较当前结点的左子树和和右子树。
+
+还有一种当两颗树都为空时，需要单独讨论，此时两棵树也是符合题意的相等
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def isSameTree(self, p, q):
+        """
+        判断两个二叉树是否相同（值相同即相同）
+        :param p: TreeNode
+        :param q: TreeNode
+        :return: bool
+        """
+        # 如果p和q都不为空
+        if p and p:
+            # 当前结点的值是否相等
+            if p.val == q.val:
+                # 判断当前结点的下一个左右结点是否相等
+                return self.isSameTree(q.left, p.left) \
+                       and self.isSameTree(q.right, p.right)
+        # 如果p和q均为空
+        if not p and not q:
+            return True
+        return False
+```
+使用递归的方法使理解起来很容易，逻辑上也相对简单。
