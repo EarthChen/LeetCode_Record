@@ -1,4 +1,4 @@
-# LeetCode_Record
+# LeetCode_Record(easy 1-20)
 
 ## Two Sum
 题目:[two sum](https://leetcode.com/problems/two-sum/description/)
@@ -905,3 +905,104 @@ class Solution:
         return False
 ```
 使用递归的方法使理解起来很容易，逻辑上也相对简单。
+
+
+## Symmetric Tree
+
+题目:[Symmetric Tree](https://leetcode.com/problems/symmetric-tree/description/)
+
+>Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+例子:
+```text
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+But the following [1,2,2,null,3,null,3] is not:
+    1
+   / \
+  2   2
+   \   \
+   3    3
+```
+
+
+题意分析:
+给出一个二叉树，检查这个二叉树是否镜像对称(左右对称)
+
+###  思路分析
+想要判断二叉树是否左右对称，也就是左子树等于右子树，或者当前结点都为空。
+
+对结点为空，我们需要单独讨论。
+
+为了好理解，我们可以抽象出一个函数，传入两个树，判断这两个树是否是镜像的，在调用时，我们只需要均传入当前树的根结点即可。
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def isSymmetric(self, root):
+        """
+        判断一颗树是否是镜像树
+        :param root: TreeNode
+        :return: bool
+        """
+        return self.isMirror(root, root)
+
+    def isMirror(self, tree_node1, tree_node2):
+        """
+        判断两棵树是否镜像
+        :param tree_node1: TreeNode
+        :param tree_node2: TreeNode
+        :return: bool
+        """
+        # 如果两个叶子结点均为空
+        if not tree_node1 and not tree_node2:
+            return True
+        # 如果只有一个叶子结点为空
+        if not tree_node1 or not tree_node2:
+            return False
+        # 当前叶子结点的值相等，并且一颗树的左子树等于另一颗树的右子树
+        return (tree_node1.val == tree_node2.val) \
+               and self.isMirror(tree_node1.right, tree_node2.left) \
+               and self.isMirror(tree_node1.left, tree_node2.right)
+```
+分别对结点均为空或者一个为空的状态左讨论，最后用递归的方式调用该树的左子树和右子树。
+
+
+## Maximum Depth of Binary Tree
+
+题目:[Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/description/)
+
+>Given a binary tree, find its maximum depth.
+>The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+
+题意分析:
+求出树的最大深度。
+
+###  思路分析
+想求最大深度，我们只需递归左右子树找出哪个子树的深度更深即可，但由于还有根结点，所以在求出两个子树的最大深度之后还需要+1.
+
+对根结点为空时，需要单独讨论，返回0即可
+
+所以我们可以有以下解法
+#### 方法一
+```python
+class Solution:
+    def maxDepth(self, root):
+        """
+        计算树的最大深度
+        :param root: TreeNode
+        :return: int
+        """
+        # 如果根结点为空返回0
+        if not root:
+            return 0
+        # 计算左右子树的中的最大深度，加上根节点
+        return max(self.maxDepth(root.left), self.maxDepth(root.right)) + 1
+```
