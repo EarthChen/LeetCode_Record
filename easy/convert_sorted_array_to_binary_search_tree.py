@@ -18,8 +18,8 @@ class Solution:
         # root结点为以列表中间值为结点的值的结点
         root = TreeNode(num[mid])
         # 递归求出
-        # 左子树为大于中间值一部分
+        # 左子树为小于中间值一部分
         root.left = self.sortedArrayToBST(num[:mid])
-        # 右子树为小于中间值的一部分
+        # 右子树为大于中间值的一部分
         root.right = self.sortedArrayToBST(num[mid + 1:])
         return root
