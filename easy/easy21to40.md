@@ -62,3 +62,47 @@ class Solution:
         return res
 ```
 使用队列的话，方式其实也是大同小异，这里就不在阐述。
+
+
+## Convert Sorted Array to Binary Search Tree
+题目:[Convert Sorted Array to Binary Search Tree](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/description/)
+
+>Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+
+
+题意分析:
+给定一个数组，元素按升序排序，将其转换为高度平衡的BST。
+
+###  思路分析
+想要转换成平衡二叉树，首先我们需要知道什么叫做平衡二叉树，知道了bst是深才能开始思考与讨论。
+>平衡二叉树（Self-balancing binary search tree）又被称为AVL树（有别于AVL算法），且具有以下性质：它是一 棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树
+
+平衡二叉树主要的特点就是“棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树”,知道了这个，题目又要求我们把一个已经排序的数组(列表)作为整个二叉树的值。
+
+所以我们可以找出数组中的中值，把他作为根，把小于中值的作为左子树，大于中值的作为右子树，在利用递归的思想，从左子树中找到左子树的根，在右子树中找到右子树的根，就可以得到我们所需要的平衡二叉树。
+
+所以我们可以有以下解法
+#### 方法一
+ 很容易想到我们可以遍历两次数组，在内循环中判断两次循环中的数相加是否等于target
+```python
+class Solution:
+    def sortedArrayToBST(self, num):
+        """
+        将已排序的数组转换为高度平衡二叉树
+        :param num: list[int]
+        :return: TreeNode
+        """
+        # 如果列表为空
+        if not num:
+            return None
+        # 列表中间的值为列表长度整数2
+        mid = len(num) // 2
+        # 生成一个以中值为结点的值的作为根结点
+        root = TreeNode(num[mid])
+        # 递归求出
+        # 左子树为小于中间值一部分
+        root.left = self.sortedArrayToBST(num[:mid])
+        # 右子树为大于中间值的一部分
+        root.right = self.sortedArrayToBST(num[mid + 1:])
+        return root
+```
