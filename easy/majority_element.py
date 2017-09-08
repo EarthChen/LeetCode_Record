@@ -17,7 +17,8 @@ class Solution:
         # 假设目标元素为第一个
         major = nums[0]
         count = 1
-        for i in range(len(nums)):
+        # 为0时的元素已经作为假设，不需要迭代
+        for i in range(1, len(nums)):
             # 能减到0就说明该元素不是最多的
             # 等于0为当前值第一次出现
             if count == 0:
@@ -36,4 +37,4 @@ class Solution:
 
 if __name__ == '__main__':
     solution = Solution()
-    print(solution.majorityElement([1, 2, 2, 2, 3]))
+    print(solution.majorityElement([6, 5, 5]))
