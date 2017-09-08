@@ -40,6 +40,11 @@ class Solution(object):
             # 这里也就是n与n的平方和相等，就会死循环，不可能开心数
             if x == y:
                 return False
+        # 对1单独处理
+        if x == 1:
+            return True
+        # 其他情况为0
+        return False
 
     # 计算当前n的平方和
     def cal(self, n):
@@ -51,4 +56,4 @@ class Solution(object):
 
 if __name__ == '__main__':
     solution = Solution()
-    print(solution.isHappy(19))
+    print(solution.isHappy(0))
