@@ -182,6 +182,55 @@ class Solution:
             return pow(2, number - 1)
 ```
 
+## 矩形覆盖
+
+### 题目描述
+我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
+
+### 分析
+通过分析前几次结果，我们也能发现这也是一个斐波那契数列，所以按照同样的方法即可,
+对于0这个特殊值需要特殊处理
+
+```Python
+class Solution:
+    def rectCover(self, number):
+        """
+        分析可知，还是斐波那契数列
+        :param number:
+        :return:
+        """
+        if number == 0:
+            return 0
+        a, b = 1, 1
+        for i in range(number):
+            a, b = b, a + b
+        return a
+```
+
+## 二进制中1的个数
+
+### 题目描述
+我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
+
+
+### 分析
+重点在怎么求补码，我的解法是转换为二进制字符串然后统计1的个数
+
+还有吧一种使用&进行操作的这里不做说明
+
+```Python
+class Solution:
+    def NumberOf1(self, n):
+        """
+        求补码然后使用字符串count函数统计
+        :param n:
+        :return:
+        """
+        if n < 0:
+            return bin(2 ** 32 + n).count('1')
+        return bin(n).count('1')
+```
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
