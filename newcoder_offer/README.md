@@ -231,6 +231,48 @@ class Solution:
         return bin(n).count('1')
 ```
 
+## 二进制中1的个数
+
+### 题目描述
+给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。
+
+### 分析
+没怎么研究，直接使用的内置函数，通过查阅资料，看到一种快速幂求解方式，有兴趣自己研究下
+
+```Python
+class Solution:
+
+    def Power(self, base, exponent):
+        """
+        还可以使用快速幂求法
+        :param base: 
+        :param exponent: 
+        :return: 
+        """
+        return pow(base, exponent)
+```
+
+## 调整数组顺序使奇数位于偶数前面
+
+### 题目描述
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+
+### 分析
+用了最简单的解法，创建两个列表分别接收奇数和偶数，最后拼起来
+
+```Python
+class Solution:
+    def reOrderArray(self, array):
+        odd_list = []
+        even_list = []
+        for i in array:
+            if i % 2 != 0:
+                odd_list.append(i)
+            else:
+                even_list.append(i)
+        return odd_list + even_list
+```
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
