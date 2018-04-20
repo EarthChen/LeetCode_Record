@@ -231,7 +231,7 @@ class Solution:
         return bin(n).count('1')
 ```
 
-## 二进制中1的个数
+## 数值的整数次方
 
 ### 题目描述
 给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。
@@ -271,6 +271,81 @@ class Solution:
             else:
                 even_list.append(i)
         return odd_list + even_list
+```
+
+## 反转链表
+
+### 题目描述
+输入一个链表，反转链表后，输出链表的所有元素。
+
+### 分析
+首先判断头节点或者第一个节点是否为空，在不为空的时候迭代链表
+
+```Python
+class Solution:
+    # 返回ListNode
+    def ReverseList(self, pHead):
+        """
+        倒置链表
+        :param pHead:
+        :return:
+        """
+        # 判断当前节点是否为空或者下一个节点为空
+        if not pHead or not pHead.next:
+            return pHead
+        # 初始化未节点为空
+        last = None
+        # 循环迭代头节点
+        while pHead:
+            # 创建一个中间节点接受头节点的下一个节点
+            tmp = pHead.next
+            # 将尾节点赋值给尾节点
+            pHead.next = last
+            # 将头节点赋值给尾节点
+            last = pHead
+            # 将中间节点赋值给头节点
+            pHead = tmp
+        return last
+```
+
+## 合并两个排序的链表
+
+### 题目描述
+输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则
+
+### 分析
+我们使用其中的一个结点将两个链表拼接起来，换句话说，就是将一个链表合并到另一个链表上，所以并不能创建一个新链表去进行操作。
+
+当其中某一个链表为空时，只需要返回另一个链表即可，这种情况需要单独讨论
+
+当两个链表均不为空时，我们需要去比较结点两个链表中结点的大小，当l1的结点值小于l2的结点时，我们就需要将l2合并到l1上，把l2的结点一个一个拼到l1上，知道l2为为空时，循环就可以结束了。这个过程是重复的，所以我们这里可以使用递归操作，反之，当l2的结点小于l1时，就把l1拼接到l2上
+
+
+```Python
+class Solution:
+    # 返回ListNode
+    def ReverseList(self, pHead):
+        """
+        倒置链表
+        :param pHead:
+        :return:
+        """
+        # 判断当前节点是否为空或者下一个节点为空
+        if not pHead or not pHead.next:
+            return pHead
+        # 初始化未节点为空
+        last = None
+        # 循环迭代头节点
+        while pHead:
+            # 创建一个中间节点接受头节点的下一个节点
+            tmp = pHead.next
+            # 将尾节点赋值给尾节点
+            pHead.next = last
+            # 将头节点赋值给尾节点
+            last = pHead
+            # 将中间节点赋值给头节点
+            pHead = tmp
+        return last
 ```
 
 >注：
