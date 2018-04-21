@@ -384,6 +384,180 @@ class Solution:
                and self.is_subtree(A.right, B.right)
 ```
 
+## 合并两个排序的链表
+
+### 题目描述
+输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则
+
+### 分析
+我们使用其中的一个结点将两个链表拼接起来，换句话说，就是将一个链表合并到另一个链表上，所以并不能创建一个新链表去进行操作。
+
+当其中某一个链表为空时，只需要返回另一个链表即可，这种情况需要单独讨论
+
+当两个链表均不为空时，我们需要去比较结点两个链表中结点的大小，当l1的结点值小于l2的结点时，我们就需要将l2合并到l1上，把l2的结点一个一个拼到l1上，知道l2为为空时，循环就可以结束了。这个过程是重复的，所以我们这里可以使用递归操作，反之，当l2的结点小于l1时，就把l1拼接到l2上
+
+
+```Python
+class Solution:
+    # 返回ListNode
+    def ReverseList(self, pHead):
+        """
+        倒置链表
+        :param pHead:
+        :return:
+        """
+        # 判断当前节点是否为空或者下一个节点为空
+        if not pHead or not pHead.next:
+            return pHead
+        # 初始化未节点为空
+        last = None
+        # 循环迭代头节点
+        while pHead:
+            # 创建一个中间节点接受头节点的下一个节点
+            tmp = pHead.next
+            # 将尾节点赋值给尾节点
+            pHead.next = last
+            # 将头节点赋值给尾节点
+            last = pHead
+            # 将中间节点赋值给头节点
+            pHead = tmp
+        return last
+```
+
+## 二叉树的镜像
+
+### 题目描述
+
+操作给定的二叉树，将其变换为源二叉树的镜像。
+
+二叉树的镜像定义：源二叉树 
+    	    8
+    	   /  \
+    	  6   10
+    	 / \  / \
+    	5  7 9 11
+    	镜像二叉树
+    	    8
+    	   /  \
+    	  10   6
+    	 / \  / \
+    	11 9 7  5
+
+### 分析
+
+一般看到树的题都是使用递归处理最简单明了，转变为镜像数，我们很容易想到去交换树的左右子树，然后递归左子树和右子树即可
+
+```Python
+class Solution:
+    def Mirror(self, root):
+        """
+        返回镜像树的根节点
+        :param root:
+        :return:
+        """
+        # 如果跟节点为空
+        if not root:
+            return None
+        # 交换左子树和右子树
+        root.left, root.right = root.right, root.left
+        # 递归左右子树
+        self.Mirror(root.left)
+        self.Mirror(root.right)
+```
+
+## 顺时针打印矩阵
+
+### 题目描述
+
+输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，例如，如果输入如下矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.
+
+### 分析
+
+找出边界条件，将矩阵分为四个方向，注意每个方向上的结束条件
+
+
+```Python
+class Solution:
+    # matrix类型为二维列表，需要返回列表
+    def printMatrix(self, matrix):
+        if matrix is None:
+            return
+        rows = len(matrix)
+        cols = len(matrix[0])
+        start = 0
+        result = []
+        while rows > 2 * start and cols > 2 * start:
+            endx = rows - 1 - start
+            endy = cols - 1 - start
+            for i in range(start, endy + 1):
+                result.append(matrix[start][i])
+            if start < endx:
+                for i in range(start + 1, endx + 1):
+                    result.append(matrix[i][endy])
+            if start < endx and start < endy:
+                for i in range(endy - 1, start - 1, -1):
+                    result.append(matrix[endx][i])
+            if start < endx - 1 and start < endy:
+                for i in range(endx - 1, start, -1):
+                    result.append(matrix[i][start])
+            start += 1
+        return result
+```
+
+## 包含min函数的栈
+
+### 题目描述
+
+定义栈的数据结构，请在该类型中实现一个能够得到栈最小元素的min函数。
+
+### 分析
+
+得到最小元素的关键就是怎么去保存这个最小元素，这里在push的时候将插入的值作为键，当前最小值作为值作为一个元素插入栈。就可以得到每个元素插入的时候最小值是什么
+
+(当然也可以使用单独的字段保存最小值)
+
+```Python
+class Solution:
+
+    def __init__(self):
+        self.stack = []
+
+    def push(self, node):
+        """
+        推入元素
+        使当前元素的值作为键，当前最小值作为值
+        :param node:
+        :return:
+        """
+        curMin = self.min()
+        if curMin is None or node < curMin:
+            curMin = node
+        self.stack.append((node, curMin))
+
+    def pop(self):
+        self.stack.pop()
+
+    def top(self):
+        """
+        弹出顶部元素的值
+        :return:
+        """
+        if len(self.stack) == 0:
+            return None
+        else:
+            return self.stack[len(self.stack) - 1][0]
+
+    def min(self):
+        """
+        得到最小栈中最小的元素
+        :return:
+        """
+        if len(self.stack) == 0:
+            return None
+        else:
+            return self.stack[len(self.stack) - 1][1]
+```
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
