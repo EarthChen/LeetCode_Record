@@ -651,6 +651,104 @@ class Solution:
         return min(rotateArray)
 ```
 
+## 栈的压入、弹出序列
+
+### 题目描述 
+
+输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4，5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
+
+### 分析
+
+使用一个辅助栈来存储，遍历入栈顺序依次添加到辅助栈，判断栈的长度且栈顶是都等于弹出序列
+
+```Python
+class Solution:
+    def IsPopOrder(self, pushV, popV):
+        if not pushV:
+            return False
+        # 创建一个辅助栈
+        stack = []
+        for i in pushV:
+            # 将遍历入栈顺序，添加到辅助栈中
+            stack.append(i)
+            # 如果栈不为空，且栈顶元素等于弹出序列
+            while len(stack) and stack[-1] == popV[0]:
+                # 出栈
+                stack.pop()
+                popV.pop(0)
+        # 如果辅助栈为空
+        if len(stack):
+            return False
+        return True
+```
+
+## 从上往下打印二叉树
+
+### 题目描述 
+从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+
+### 分析
+使用队列去存储中间值,使用while循环去遍历即可
+
+```Python
+class Solution:
+    # 返回从上到下每个节点值列表，例：[1,2,3]
+    def PrintFromTopToBottom(self, root):
+        result = []
+        # 如果根节点为空
+        if not root:
+            return result
+        # 将根节点放入列表中
+        q = [root]
+        # 当ｑ列表不为空
+        while len(q):
+            # 　将ｑ列表的第一个元素赋值给新节点
+            node = q.pop(0)
+            # 将节点的值添加到结果列表中
+            result.append(node.val)
+            # 如果节点有左子树
+            if node.left:
+                # 将节点的左子树放入ｑ列表
+                q.append(node.left)
+            if node.right:
+                # 将节点的右子树放入ｑ列表
+                q.append(node.right)
+        return result
+```
+
+## 二叉搜索树的后序遍历序列
+
+### 题目描述 
+
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
+
+### 分析
+根据后序遍历的特点，我们可以知道数组中的最后宇哥元素时根节点，有了根节点，我们可以找到列表中最后一个小于根节点的值的元素。遍历这个元素到数组的最后一个元素之间的元素(元素为根节点的右子树)，右子树的所有元素应该大于根节点，如果有小于根节点的元素，返回false，接下来递归数组中的左右元素
+
+```Python
+class Solution:
+    def VerifySquenceOfBST(self, sequence):
+        length = len(sequence)
+        if length == 0:
+            return False
+        if length == 1:
+            return True
+        # 数组的最后元素是该树的根节点
+        root = sequence[-1]
+        left = 0
+        # 找到最后一个小于根节点的元素
+        while sequence[left] < root:
+            left += 1
+        # 遍历最后一个小于根节点的元素到根节点之前
+        for i in range(left, length - 1):
+            # 判断是否大于根节点(右子树元素)
+            if sequence[i] < root:
+                return False
+        # 递归左右子树
+        return self.VerifySquenceOfBST(sequence[:left]) \
+               or self.VerifySquenceOfBST(sequence[left:length - 1])
+```
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
