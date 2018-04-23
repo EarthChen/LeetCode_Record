@@ -558,6 +558,99 @@ class Solution:
             return self.stack[len(self.stack) - 1][1]
 ```
 
+## 重建二叉树
+
+### 题目描述
+输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+
+
+### 分析
+在前序遍历中找到跟节点，根据中序遍历中的跟节点的左右找到左右子树的元素，进行递归即可
+
+```Python
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class Solution:
+    # 返回构造的TreeNode根节点
+    def reConstructBinaryTree(self, pre, tin):
+        """
+        根据前序和中序遍历重建二叉树
+        :param pre:
+        :param tin:
+        :return:
+        """
+        if not pre and not tin:
+            return None
+        # 根据前序遍历获取到根节点
+        root = TreeNode(pre[0])
+        # 根据中序遍历得到根节点的索引
+        i = tin.index(pre[0])
+        # 　递归得到左子树（前序遍历的第１位到根节点索引＋１位，中序遍历的第０位到根节点的索引位）
+        root.left = self.reConstructBinaryTree(pre[1:i + 1], tin[:i])
+        # 　递归得到左子树（前序遍历的第根节点＋１位到最后一位，中序遍历的第根节点＋１到最后一位）
+        root.right = self.reConstructBinaryTree(pre[i + 1:], tin[i + 1:])
+        return root
+```
+
+## 用两个栈实现队列
+
+### 题目描述
+用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+
+### 分析
+在入队的时候均使用栈1存储，出队的时候先判断栈2是否为空，如果为空，将栈1的元素依次弹出到栈2，然后弹出栈2的元素
+
+```Python
+class Solution:
+
+    def __init__(self):
+        self.stack1 = []
+        self.stack2 = []
+
+    def push(self, node):
+        # write code here
+        # 直接向栈1压入元素
+        self.stack1.append(node)
+
+    def pop(self):
+        # return xx
+        # 如果栈2位空的情况
+        if not self.stack2:
+            # 迭代栈1，将栈1的元素弹出并压入栈2
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+            # 此时弹出栈2的元素
+            return self.stack2.pop()
+        # 如果栈1不为空，说明已经将元素压入栈2，直接弹出即可
+        return self.stack2.pop()
+```
+
+## 旋转数组的最小数字
+
+### 题目描述 
+
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。 输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。 NOTE：给出的所有元素都大于0，若数组大小为0，请返回0
+
+### 分析
+使用py的内建函数直接求得最小值
+
+```Python
+class Solution:
+    def minNumberInRotateArray(self, rotateArray):
+        """
+        旋转数组的最小值
+        :param rotateArray:
+        :return:
+        """
+        if not rotateArray:
+            return 0
+        return min(rotateArray)
+```
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
