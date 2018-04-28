@@ -749,6 +749,39 @@ class Solution:
                or self.VerifySquenceOfBST(sequence[left:length - 1])
 ```
 
+## 二叉树中和为某一值的路径
+
+### 题目描述
+
+输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。
+
+
+### 分析
+首先对特殊边界条件进行判断，然后分别递归左右子树，向下递归时需要使用目标值减去根节点的值，最后将左右子树的递归结果拼接为一个列表进行遍历，使用一个新列表去接受根节点加上遍历的元素值
+
+
+```Python
+class Solution:
+    # 返回二维列表，内部每个列表表示找到的路径
+    def FindPath(self, root, expectNumber):
+        # 如果是个空树
+        if not root:
+            return []
+        # 如果根节点不为空，并且根节点的值等于指定值而且左右子树均为空
+        if root and not root.left and not root.right and root.val == expectNumber:
+            return [[root.val]]
+        res = []
+        # 递归左子树
+        left = self.FindPath(root.left, expectNumber - root.val)
+        # 递归右子树
+        right = self.FindPath(root.right, expectNumber - root.val)
+        # 遍历拼接左右子树的结果
+        for i in left + right:
+            # 将根节点的值+i添加到res数组上
+            res.append([root.val] + i)
+        return res
+```
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
