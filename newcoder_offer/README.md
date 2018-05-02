@@ -782,6 +782,124 @@ class Solution:
         return res
 ```
 
+## 复杂链表的复制
+
+### 题目描述
+
+输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head。（注意，输出结果中请不要返回参数中的节点引用，否则判题程序会直接返回空）
+
+
+
+### 分析
+
+这里给出的解法的核心就是使用两个字典保存随机节点和新老节点的对应，在需要构建的节点直接取出赋值
+
+
+```Python
+class RandomListNode:
+    def __init__(self, x):
+        self.label = x
+        self.next = None
+        self.random = None
+
+
+class Solution:
+    # 返回 RandomListNode
+    def Clone(self, pHead):
+        head = pHead
+        p_head = None
+        new_head = None
+
+        # 保存随机节点和新老节点的字典
+        random_dic = {}
+        old_new_dic = {}
+
+        # 当头节点不为空时
+        while head:
+            # 根据旧链表构造一个新节点
+            node = RandomListNode(head.label)
+            # 将头节点的随机指向的节点赋值给新节点的头节点
+            node.random = head.random
+            # 将节点对象的内存地址和头节点的id保存到字典中
+            old_new_dic[id(head)] = id(node)
+            # 将随机节点的对象地址和对象节点保存在随机字典中
+            random_dic[id(node)] = node
+            # 将头节点的下一个元素赋值给头节点
+            head = head.next
+
+            # 如果新头节点存在
+            if new_head:
+                # 将构造的新节点赋值给头节点的下一个节点
+                new_head.next = node
+                # 将新头节点的下一个节点赋值给头节点
+                new_head = new_head.next
+            else:
+                # 头新节点不存在时，直接将构造的新节点赋值给头节点
+                new_head = node
+                # 将新构造的节点赋值给节点
+                p_head = node
+        new_head = p_head
+        # 如果新头节点存在
+        while new_head:
+            # 并且头节点的随机指针不为空
+            if new_head.random is not None:
+                # 从随机字典中取出随机节点赋值给头节点的随机指针
+                new_head.random = random_dic[old_new_dic[id(new_head.random)]]
+            # 将头节点的下一个节点赋值给头结点
+            new_head = new_head.next
+        # 返回头节点
+        return p_head
+```
+
+## 二叉搜索树与双向链表
+
+### 题目描述
+
+输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
+
+### 分析
+首先我们需要知道二叉搜索树的特点，也就是左小右大，我们需要递归处理左右子树，交换左右子树中的子节点使其成为链表，根节点在最中间
+
+```Python
+class Solution:
+    def Convert(self, pRootOfTree):
+        # 处理根节点为空
+        if not pRootOfTree:
+            return pRootOfTree
+        # 只有根节点的情况
+        if not pRootOfTree.left and not pRootOfTree.right:
+            return pRootOfTree
+        # 处理左子树
+        self.Convert(pRootOfTree.left)
+        left = pRootOfTree.left
+
+        # 连接根与左子树最大结点
+        if left:
+            while (left.right):
+                left = left.right
+            # 　交换节点的值
+            pRootOfTree.left, left.right = left, pRootOfTree
+
+        # 处理右子树
+        self.Convert(pRootOfTree.right)
+        right = pRootOfTree.right
+
+        # 连接根与右子树最小结点
+        if right:
+            while (right.left):
+                right = right.left
+            # 　交换节点的值
+            pRootOfTree.right, right.left = right, pRootOfTree
+
+        # 当左子树存在时
+        while (pRootOfTree.left):
+            # 左子树赋值给自己
+            pRootOfTree = pRootOfTree.left
+        # 返回链表的头节点
+        return pRootOfTree
+```
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
