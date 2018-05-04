@@ -900,6 +900,57 @@ class Solution:
 ```
 
 
+## 字符串的排列
+
+### 题目描述
+
+输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。。
+
+>输入一个字符串,长度不超过9(可能有字符重复),字符只包括大小写字母。
+
+### 分析
+使用标准库中的方法即可，重排序之后进行去重排序
+
+```Python
+import itertools
+
+
+class Solution:
+    def Permutation(self, ss):
+        # 如果ss为空
+        if not ss:
+            return []
+        # 使用标准库中的permutations进行全排序，使用map函数聚合
+        # 使用set去重
+        # 转为list并排序
+        return sorted(list(set(map(''.join, itertools.permutations(ss)))))
+```
+
+## 数组中出现次数超过一半的数字
+
+### 题目描述
+
+数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0
+
+### 分析
+
+求数组长度的一半，然后遍历数组中每个元素的，判断是否大于数组长度的一半
+
+
+```Python
+class Solution:
+    def MoreThanHalfNum_Solution(self, numbers):
+        # 求的数组长度的一半
+        mid = len(numbers) / 2
+        # 遍历数组
+        for i in numbers:
+            # 判断数组中元素出现的次数
+            if numbers.count(i) > mid:
+                return i
+        return 0
+```
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
