@@ -1024,6 +1024,66 @@ class Solution:
 ```
 
 
+## 丑数
+
+### 题目描述
+
+把只包含因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含因子7。 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数
+
+### 分析
+
+既然知道第一个丑数为1，并且丑数的因子只包含2 3 5，我们可以分别乘以2 3 5，来求出其中的最小值，放入丑数列表，最后取出最后一个即可
+
+```Python
+class Solution:
+    def GetUglyNumber_Solution(self, index):
+        if index < 1:
+            return index
+        # 使用一个列表保存丑数
+        res = [1]
+        i = 0
+        j = 0
+        k = 0
+        # 当丑数数量不等于index时
+        while len(res) != index:
+            # 求出当前丑数*2 *3 *5中的最小值
+            minV = min(res[i] * 2, res[j] * 3, res[k] * 5)
+            # 将最小值放入丑数列表
+            res.append(minV)
+            # 判断当前丑数*2 *3 *5是否小于等于丑数
+            if res[i] * 2 <= minV:
+                i += 1
+            if res[j] * 3 <= minV:
+                j += 1
+            if res[k] * 5 <= minV:
+                k += 1
+        # 返回最后一个丑数
+        return res[-1]
+```
+
+
+## 第一个只出现一次的字符
+
+### 题目描述
+
+在一个字符串(1<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置
+
+### 分析
+
+当s为空时候，直接返回-1，当不为空的时候，遍历字符串，当从双向查找的索引值都相等，即找到所求
+
+```Python
+class Solution:
+    def FirstNotRepeatingChar(self, s):
+        if s == '':
+            return -1
+        for i in range(len(s)):
+            # 当从前往后查找和从后向前查找时返回值相等时，即只出现了一次
+            if s.find(s[i]) == s.rfind(s[i]):
+                return i
+        return -1
+```
+
 
 >注：
 >- 上述测试在**Python3.5**中成功
