@@ -1085,6 +1085,130 @@ class Solution:
 ```
 
 
+## 两个链表的第一个公共结点
+
+### 题目描述
+
+输入两个链表，找出它们的第一个公共结点。
+
+### 分析
+
+使用列表存储其中一个链表，遍历第二个链表判断是否在列表中
+
+```Python
+class Solution:
+    def FindFirstCommonNode(self, pHead1, pHead2):
+        list1 = []
+        node1 = pHead1
+        node2 = pHead2
+        # 使用一个列表存储第一个链表的所有节点
+        while node1:
+            list1.append(node1.val)
+            node1 = node1.next
+        # 循环遍历第二个链表判断是否存在列表中
+        while node2:
+            if node2.val in list1:
+                return node2
+            else:
+                node2 = node2.next
+```
+
+## 数字在排序数组中出现的次数
+
+### 题目描述
+
+统计一个数字在排序数组中出现的次数。
+
+### 分析
+
+由于是排序的，所以可以想到二分查找，当然利用一些标准库函数也可以，但是不符合题意了
+
+
+```Python
+class Solution:
+    def GetNumberOfK(self, data, k):
+        """
+        在Python中可以直接使用data.count(k)来解决
+
+        为了题目的意义，这里使用二分查找
+        :param data:
+        :param k:
+        :return:
+        """
+        length = len(data)
+        if length == 0:
+            return 0
+        first = self.get_first_k(data, k, 0, length - 1)
+        end = self.get_last_k(data, k, 0, length - 1)
+        if first != -1 and end != -1:
+            return end - first + 1
+        return 0
+
+    def get_first_k(self, data, k, start, end):
+        """
+        递归写法二分查找
+        :param data:
+        :param k:
+        :param start:
+        :param end:
+        :return:
+        """
+        if start > end:
+            return -1
+        mid = start + (end - start) / 2
+        if data[mid] > k:
+            return self.get_first_k(data, k, start, mid - 1)
+        elif data[mid] < k:
+            return self.get_first_k(data, k, mid + 1, end)
+        elif mid - 1 >= 0 and data[mid - 1] == k:
+            return self.get_first_k(data, k, start, mid - 1)
+        else:
+            return mid
+
+    def get_last_k(self, data, k, start, end):
+        """
+        循环写法二分查找
+        :param data:
+        :param k:
+        :param start:
+        :param end:
+        :return:
+        """
+        length = len(data)
+        mid = start + (end - start) / 2
+        while start <= end:
+            if data[mid] > k:
+                end = mid - 1
+            elif data[mid] < k:
+                start = mid + 1
+            elif mid + 1 < length and data[mid + 1] == k:
+                start = mid + 1
+            else:
+                return mid
+            mid = start + (end - start) / 2
+        return -1
+```
+
+
+## 二叉树的深度
+
+### 题目描述
+输入一棵二叉树，求该树的深度。从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。
+
+### 分析
+
+求深度，递归判断左右子树的深度，最后加上根节点即可
+
+
+```Python
+class Solution:
+    def TreeDepth(self, pRoot):
+        if not pRoot:
+            return 0
+        return max(self.TreeDepth(pRoot.left), self.TreeDepth(pRoot.right)) + 1
+```
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
