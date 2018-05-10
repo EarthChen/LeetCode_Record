@@ -1209,6 +1209,114 @@ class Solution:
 ```
 
 
+## 平衡二叉树
+
+### 题目描述
+输入一棵二叉树，判断该二叉树是否是平衡二叉树。
+
+### 分析
+
+根据平衡二叉树的特点求解即可
+
+
+```Python
+class Solution:
+    def IsBalanced_Solution(self, pRoot):
+        """
+        判断一个树是否为平衡二叉树
+        当check函数的发挥值不等于-1时返回true，等于-1是返回false
+        :param pRoot: TreeNode
+        :return: bool
+        """
+        return self.check(pRoot) != -1
+
+    def check(self, root):
+        """
+        检查结点
+        :param root: TreeNode
+        :return: int
+        """
+        # 结点为空时
+        if root is None:
+            return 0
+        # 递归得出左子树的返回值
+        left = self.check(root.left)
+        # 递归得出右子树的返回值
+        right = self.check(root.right)
+        # 如果左子树不为平衡树或者右子树不为平衡二叉树，
+        # 左右子树相减的值大于1(-1-(-1))左右子树不为平衡树的情况
+        if left == -1 or right == -1 or abs(left - right) > 1:
+            return -1
+        # left right分别等于0或1的情况
+        return 1 + max(left, right)
+```
+
+
+## 数组中只出现一次的数字
+
+### 题目描述
+一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。
+
+### 分析
+
+使用一个列表来保存元素，因为每个元素最多出现两次，当出现第二次的时候，删除该元素，最后列表中只会留下只出现一次的元素
+
+
+```Python
+class Solution:
+    # 返回[a,b] 其中ab是出现一次的两个数字
+    def FindNumsAppearOnce(self, array):
+        """
+        遍历数组，如果已存在的结果列表中就移除，不存在则添加
+        :param array:
+        :return:
+        """
+        tmp = []
+        for a in array:
+            if a in tmp:
+                tmp.remove(a)
+            else:
+                tmp.append(a)
+        return tmp
+```
+
+
+## 和为S的连续正数序列
+
+### 题目描述
+
+小明很喜欢数学,有一天他在做数学作业时,要求计算出9~16的和,他马上就写出了正确答案是100。但是他并不满足于此,他在想究竟有多少种连续的正数序列的和为100(至少包括两个数)。没多久,他就得到另一组连续正数和为100的序列:18,19,20,21,22。现在把问题交给你,你能不能也很快的找出所有和为S的连续正数序列? Good Luck!
+
+输出描述:
+输出所有和为S的连续正数序列。序列内按照从小至大的顺序，序列间按照开始数字从小到大的顺序
+
+### 分析
+
+这里给出的解法是最笨的方法，时间复杂度会比较高，也就是依次从0开始相加，直到等于所求的和。还可以根据序列的特点去求解，比如等差数列求和，，，可以相对降低时间复杂度
+
+
+```Python
+class Solution:
+    def FindContinuousSequence(self, tsum):
+        # 当要求的和的值小于3，不存在这样的序列
+        if tsum < 3:
+            return []
+        s = []
+        # 遍历从1到所求和之前的值
+        for i in range(1, tsum):
+            t = 0
+            j = i
+            # 从0开始依次相加，直到不小于和
+            while t < tsum:
+                t = t + j
+                j = j + 1
+            # 判断是否等于和
+            if t == tsum:
+                s.append(range(i, j))
+        return s
+```
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
