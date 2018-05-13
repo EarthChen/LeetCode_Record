@@ -1388,6 +1388,78 @@ class Solution:
         return ' '.join(l[::-1])
 ```
 
+## 求1+2+3+...+n
+
+### 题目描述
+
+求1+2+3+...+n，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
+
+### 分析
+
+使用递归解决
+
+```Python
+class Solution:
+    def Sum_Solution(self, n):
+        if n == 1:
+            return 1
+        return n + self.Sum_Solution(n - 1)
+```
+
+## 不用加减乘除做加法
+
+### 题目描述
+
+写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
+
+### 分析
+
+这里使用内置函数sum
+
+（可以使用位运算，但是Python这里涉及到负数不知道怎么就报错了，就不展示代码了）
+
+```Python
+class Solution:
+    def Add(self, num1, num2):
+        return sum([num1, num2])
+```
+
+## 把字符串转换成整数
+
+### 题目描述
+
+将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。 数值为0或者字符串不是一个合法的数值则返回0
+
+### 分析
+
+首先判断边界条件，最后使用ord()将字符转为数字，计算。
+
+(看答案有人使用int()函数直接解决，但个人觉得不怎么符合题意)
+
+```Python
+class Solution:
+    def StrToInt(self, s):
+        if not s:
+            return 0
+        number = 0
+        start = 0
+        flage = 1
+        if s[0] == '+':
+            start = 1
+        elif s[0] == '-':
+            flage = -1
+            start = 1
+        # 遍历字符串
+        for i in range(start, len(s)):
+            # 如果不在0到9
+            if s[i] < '0' or s[i] > '9':
+                return 0
+            else:
+                # 转换为数字
+                number = number * 10 + flage * (ord(s[i]) - ord('0'))
+        return number
+```
+
 
 >注：
 >- 上述测试在**Python3.5**中成功
