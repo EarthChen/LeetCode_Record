@@ -1460,6 +1460,95 @@ class Solution:
         return number
 ```
 
+## 数组中重复的数字
+
+### 题目描述
+
+在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是第一个重复的数字2
+
+### 分析
+
+首先判断边界条件，遍历数组时，使用一个列表去保存遍历过的值，判断当前遍历的元素是否存在列表中，如果存在，将当前值保存，并返回true，窦泽将当前值保存在列表中
+
+```Python
+class Solution:
+    # 这里要特别注意~找到任意重复的一个值并赋值到duplication[0]
+    # 函数返回True/False
+    def duplicate(self, numbers, duplication):
+        # 边界条件
+        if numbers is None or numbers == []:
+            return False
+        # 使用一个列表接收遍历过的值
+        s = []
+        for i in numbers:
+            # 存在
+            if i in s:
+                duplication[0] = i
+                return True
+            s.append(i)
+        return False
+```
+
+## 构建乘积数组
+
+### 题目描述
+
+给定一个数组A[0,1,...,n-1],请构建一个数组B[0,1,...,n-1],其中B中的元素B[i]=A[0]*A[1]*...*A[i-1]*A[i+1]*...*A[n-1]。不能使用除法。
+
+### 分析
+
+首先初始化b，然后遍历ab，判断当前遍历的索引是否相等，不相等时，将B[i]*A[i]赋值给B[i]
+
+```Python
+class Solution:
+    def multiply(self, A):
+        # 将b列表元素都初始化为1
+        B = [1] * len(A)
+        # 遍历a
+        for i in range(len(A)):
+            # 遍历b
+            for j in range(len(B)):
+                # 如果i不等于j
+                if i != j:
+                    B[i] *= A[j]
+        return B
+```
+
+
+## 正则表达式匹配
+
+### 题目描述
+
+请实现一个函数用来匹配包括'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，而'*'表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串"aaa"与模式"a.a"和"ab*ac*a"匹配，但是与"aa.a"和"ab*a"均不匹配
+
+### 分析
+
+首先也是判断边界条件，当模式或者字符串为空的情况。
+
+然后依次判断每个字符，判断模式串第二个字符是否为*,然后只需判断第一个模式串是否为.或者与字符相等，当满足条件时，递归判断从第二个开始的字符串。
+
+如果模式串第二个字符串不为*时，则递归判断第三个开始的字符串
+
+同时还需要判断只匹配一个字符的情况
+
+```Python
+class Solution:
+    # s, pattern都是字符串
+    def match(self, s, pattern):
+        if len(s) == 0 and len(pattern) == 0:  # 若均为空，返回true
+            return True
+        if len(s) > 0 and len(pattern) == 0:  # 若模式串为空，而字符串不为空，返回False
+            return False
+        if len(pattern) > 1 and pattern[1] == '*':  # 若模式串的第二个字符为*
+            if len(s) > 0 and (s[0] == pattern[0] or pattern[0] == '.'):  # 若s不为0，且第一个字符匹配
+                return self.match(s[1:], pattern) or self.match(s, pattern[2:]) or self.match(s[1:], pattern[2:])
+            # 有三种情况：**表示模式串的第一个字符个数为2即重复了；*表示模式串的第一个字符个数为0；*表示模式串的第一个字符个数为1
+            else:  # s的长度为0时，看模式串后面是否还有未匹配的项
+                return self.match(s, pattern[2:])
+        if len(s) > 0 and (pattern[0] == '.' or pattern[0] == s[0]):  # 只匹配一个字符的情况
+            return self.match(s[1:], pattern[1:])  # 继续匹配该字符之后的字符串
+```
+
 
 >注：
 >- 上述测试在**Python3.5**中成功
