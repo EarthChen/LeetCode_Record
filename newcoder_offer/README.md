@@ -1550,6 +1550,102 @@ class Solution:
 ```
 
 
+## 表示数值的字符串
+
+### 题目描述
+
+请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都表示数值。 但是"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
+
+### 分析
+
+使用float函数转为数字，当转换失败抛出异常时，返回false
+
+或者使用正则表达式去判断
+
+```Python
+class Solution:
+    # s字符串
+    def isNumeric(self, s):
+        # write code here
+        try:
+            a = float(s)
+            return True
+        except:
+            return False
+```
+
+
+## 字符流中第一个不重复的字符
+
+### 题目描述
+
+请实现一个函数用来找出字符流中第一个只出现一次的字符。例如，当从字符流中只读出前两个字符"go"时，第一个只出现一次的字符是"g"。当从该字符流中读出前六个字符“google"时，第一个只出现一次的字符是"l"。
+
+输出描述:
+如果当前字符流没有存在出现一次的字符，返回#字符。
+
+### 分析
+
+使用字符串和一个字典去保存字符出现的次数(字符为键，次数为值)遍历字符串，判断字典中是否含有键为字符的元素，如果有，值为1时，返回即可。否则返回‘#’
+
+```Python
+class Solution:
+    # 返回对应char
+    def __init__(self):
+        """
+        使用一个字符串和一个字典保存字符串出现的次数
+        """
+        self.s = ''
+        self.dict1 = {}
+
+    def FirstAppearingOnce(self):
+        # write code here
+        for i in self.s:
+            # 如果键值对的值为1(出现的次数为1)
+            if self.dict1[i] == 1:
+                return i
+        return '#'
+
+    def Insert(self, char):
+        # 每次将字符串加上新字符
+        self.s = self.s + char
+        # 判断当前字符是否是字典中的键
+        if char in self.dict1:
+            # 将对应的键值+1
+            self.dict1[char] = self.dict1[char] + 1
+        else:
+            # 不存在即直接赋值为1
+            self.dict1[char] = 1
+```
+
+
+## 链表中环的入口结点
+
+### 题目描述
+
+一个链表中包含环，请找出该链表的环的入口结点。
+
+### 分析
+
+使用一个列表保存遍历过的节点，遍历单链表判断是否在列表中。
+
+```Python
+class Solution:
+    def EntryNodeOfLoop(self, pHead):
+        # 遍历链表，环的存在，遍历遇见的第一个重复的即为入口节点
+        tempList = []
+        if not pHead or not pHead.next:
+            return None
+        node = pHead
+        while node:
+            if node in tempList:
+                return node
+            else:
+                tempList.append(node)
+            node = node.next
+```
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
