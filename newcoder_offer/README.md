@@ -1646,6 +1646,99 @@ class Solution:
 ```
 
 
+## 删除链表中重复的结点
+
+### 题目描述
+
+在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5
+
+### 分析
+
+首先判断边界条件，当满足条件时，判断下当前节点的下一个节点是否等于当前节点，不等于的话递归继续得到下一个节点，当等于时，循环直到等于空或者不等于当前节点值，使当前节点的下一个节点指向不等于当前节点的节点。重复判断下一个节点是否等于当前节点
+
+```Python
+class Solution:
+    def deleteDuplication(self, pHead):
+        if pHead is None or pHead.next is None:
+            return pHead
+        head1 = pHead.next
+        # 如果下一个节点不等于当前节点
+        if head1.val != pHead.val:
+            # 递归得到下一个节点
+            pHead.next = self.deleteDuplication(pHead.next)
+        else:
+            # 如果下一个节点等于当前节点并且下一个节点不为空
+            while pHead.val == head1.val and head1.next is not None:
+                # 使下一个节点为下下个节点
+                head1 = head1.next
+            if head1.val != pHead.val:
+                pHead = self.deleteDuplication(head1)
+            else:
+                return None
+        return pHead
+```
+
+
+## 二叉树的下一个结点
+
+### 题目描述
+
+给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。
+
+### 分析
+
+分析中序遍历的特点，判断当前是否有左右子树，当有右子树时，则找出右子树的最左节点。当没右子树，则找第一个当前节点是父节点左孩子的节点
+
+```Python
+class Solution:
+    def GetNext(self, pNode):
+        if not pNode:
+            return pNode
+        # 如果有右子树，则找右子树的最左节点
+        if pNode.right:
+            left1 = pNode.right
+            while left1.left:
+                left1 = left1.left
+            return left1
+        # 没右子树，则找第一个当前节点是父节点左孩子的节点
+        while pNode.next:
+            tmp = pNode.next
+            if tmp.left == pNode:
+                return tmp
+            pNode = tmp
+        # 退到了根节点仍没找到，则返回null
+        return None
+```
+
+
+## 对称的二叉树
+
+### 题目描述
+
+请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。
+
+### 分析
+
+创建一个新方法，传入两颗数，分别判断头节点和左右子树的边界条件，然后递归判断当前左子树和右子树是否为对称的
+
+```Python
+class Solution:
+    def isSymmetrical(self, pRoot):
+        return self.isSymBT(pRoot, pRoot)
+
+    def isSymBT(self, tree1, tree2):
+        if tree1 is None and tree2 is None:
+            return True
+        if tree1 is None or tree2 is None:
+            return False
+        if tree1.val != tree2.val:
+            return False
+        return self.isSymBT(tree1.left, tree2.right) and self.isSymBT(tree1.right, tree2.left)
+
+```
+
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
