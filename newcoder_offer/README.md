@@ -1738,6 +1738,145 @@ class Solution:
 ```
 
 
+## 按之字形顺序打印二叉树
+
+### 题目描述
+
+请实现一个函数按照之字形打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。
+
+### 分析
+
+分别使用列表来保存遍历过的节点，下一层节点，结果。并且在设置一个标识符来判断当前应该是从左到右遍历还是从右向左遍历。
+
+```Python
+class Solution:
+    def Print(self, pRoot):
+        root = pRoot
+        if not root:
+            return []
+        level = [root]
+        # 使用一个列表保存结果
+        result = []
+        # 使用一个标识符标识左右遍历顺序
+        left_to_right = False
+        while level:
+            # 保存当前节点值的列表
+            cur_values = []
+            # 保存下一层节点列表
+            next_level = []
+            # 　遍历层级节点
+            for i in level:
+                # 将当前遍历的节点值保存在当前节点值列表中
+                cur_values.append(i.val)
+                # 判断当前节点是否有左右子树，依次添加到下一层节点列表
+                if i.left:
+                    next_level.append(i.left)
+                if i.right:
+                    next_level.append(i.right)
+            # 　判断当前从左到右遍历还是从右到左遍历
+            if left_to_right:
+                cur_values.reverse()
+            # 将遍历过节点值放入总结果列表中
+            if cur_values:
+                result.append(cur_values)
+            # 将下一层节点付给当前层
+            level = next_level
+            # 将标识符倒置
+            left_to_right = not left_to_right
+        return result
+```
+
+
+## 把二叉树打印成多行
+
+### 题目描述
+
+从上到下按层打印二叉树，同一层结点从左至右输出。每一层输出一行。
+
+### 分析
+
+和上一题一样的思路，但是比之前少了一个顺序标识符，只需要从左到右遍历即可
+
+```Python
+class Solution:
+    # 返回二维列表[[1,2],[4,5]]
+    def Print(self, pRoot):
+        if not pRoot:
+            return []
+        result = []
+        root = pRoot
+        level = [root]
+        while level:
+            cur_value = []
+            next_level = []
+            for i in level:
+                cur_value.append(i.val)
+                if i.left:
+                    next_level.append(i.left)
+                if i.right:
+                    next_level.append(i.right)
+            if cur_value:
+                result.append(cur_value)
+            level = next_level
+        return result
+```
+
+## 序列化二叉树
+
+### 题目描述
+
+请实现两个函数，分别用来序列化和反序列化二叉树
+
+### 分析
+
+序列化，就是将整个二叉树转换为字符串，这里将空节点转为‘＃’每个节点之间使用‘，’分割
+
+反序列化，将序列化后的字符串创建一个二叉树
+
+均使用递归解决，注意边界条件
+
+```Python
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    flag = -1
+
+    def Serialize(self, root):
+        """
+        对于序列化：使用前序遍历，递归的将二叉树的值转化为字符，并且在每次二叉树的结点
+        不为空时，在转化val所得的字符之后添加一个' ， '作为分割。对于空节点则以 '#' 代替
+        :param root:
+        :return:
+        """
+        if not root:
+            return '#'
+        return str(root.val) + ',' + self.Serialize(root.left) + ',' + self.Serialize(root.right)
+
+    def Deserialize(self, s):
+        """
+        对于反序列化：按照前序顺序，递归的使用字符串中的字符创建一个二叉树
+        :param s:
+        :return:
+        """
+        self.flag += 1
+
+        l = s.split(',')
+        if self.flag >= len(s):
+            return None
+
+        root = None
+        if l[self.flag] != '#':
+            root = TreeNode(int(l[self.flag]))
+            root.left = self.Deserialize(s)
+            root.right = self.Deserialize(s)
+        return root
+```
+
 
 >注：
 >- 上述测试在**Python3.5**中成功
