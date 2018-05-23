@@ -1878,6 +1878,96 @@ class Solution:
 ```
 
 
+## 二叉搜索树的第k个结点
+
+### 题目描述
+
+给定一颗二叉搜索树，请找出其中的第k大的结点。例如， 5 / \ 3 7 /\ /\ 2 4 6 8 中，按结点数值大小顺序第三个结点的值为4。
+
+### 分析
+
+首先根据二叉搜索树的特点得到整个节点的有序列表，然后在节点中取出相应节点即可
+
+```Python
+class Solution:
+    # 返回对应节点TreeNode
+    def KthNode(self, pRoot, k):
+        if pRoot is None or k == 0:
+            return None
+        n = self.isorder(pRoot)
+        if len(n) < k:
+            return None
+        else:
+            # 返回第ｋ个节点
+            return n[k - 1]
+
+    def isorder(self, pRoot):
+        re = []
+        if not pRoot:
+            return None
+        if pRoot.left:
+            # 如果左子树存在，递归得到所有子节点放入列表中
+            re.extend(self.isorder(pRoot.left))
+        # 将根节点放入列表中
+        re.append(pRoot)
+        if pRoot.right:
+            # 如果右子树存在，递归得到所有子节点放入列表中
+            re.extend(self.isorder(pRoot.right))
+        return re
+```
+
+
+## 数据流中的中位数
+
+### 题目描述
+
+如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。
+
+### 分析
+
+在插入时，将其插入列表中并排序，然后根据奇数偶数求中位数
+
+```Python
+class Solution:
+    x = []
+
+    def Insert(self, num):
+        # 将数字添加到列表中并排序
+        self.x.append(num)
+        self.x.sort()
+
+    def GetMedian(self, x):
+        # 得到长度
+        n = len(self.x)
+        # 判断奇数偶数
+        if n % 2 == 1:
+            return self.x[n // 2]
+        else:
+            return (self.x[n // 2 - 1] + self.x[n // 2]) / 2.0
+```
+
+## 滑动窗口的最大值
+
+### 题目描述
+
+给定一个数组和滑动窗口的大小，找出所有滑动窗口里数值的最大值。例如，如果输入数组{2,3,4,2,6,2,5,1}及滑动窗口的大小3，那么一共存在6个滑动窗口，他们的最大值分别为{4,4,6,6,6,5}； 针对数组{2,3,4,2,6,2,5,1}的滑动窗口有以下6个： {[2,3,4],2,6,2,5,1}， {2,[3,4,2],6,2,5,1}， {2,3,[4,2,6],2,5,1}， {2,3,4,[2,6,2],5,1}， {2,3,4,2,[6,2,5],1}， {2,3,4,2,6,[2,5,1]}。
+
+### 分析
+
+首先判断边界条件，然后使用一个列表保存最大值，根据滑动的特点，每次将其向其向右移动，并求最大值，将其加入
+
+```Python
+class Solution:
+    def maxInWindows(self, num, size):
+        if size == 0 or size > len(num):
+            return []
+        max_num = []
+        for i in range(len(num) - size + 1):
+            max_num.append(max(num[i:i + size]))
+        return max_num
+```
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
