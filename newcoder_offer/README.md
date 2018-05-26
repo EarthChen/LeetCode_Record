@@ -2045,6 +2045,183 @@ class Solution:
 ```
 
 
+##  扑克牌顺子
+
+### 题目描述
+
+LL今天心情特别好,因为他去买了一副扑克牌,发现里面居然有2个大王,2个小王(一副牌原本是54张^_^)...他随机从中抽出了5张牌,想测测自己的手气,看看能不能抽到顺子,如果抽到的话,他决定去买体育彩票,嘿嘿！！“红心A,黑桃3,小王,大王,方片5”,“Oh My God!”不是顺子.....LL不高兴了,他想了想,决定大\小 王可以看成任何数字,并且A看作1,J为11,Q为12,K为13。上面的5张牌就可以变成“1,2,3,4,5”(大小王分别看作2和4),“So Lucky!”。LL决定去买体育彩票啦。 现在,要求你使用这幅牌模拟上面的过程,然后告诉我们LL的运气如何。为了方便起见,你可以认为大小王是0。
+
+### 分析
+
+先统计王的数量，再把牌排序，如果后面一个数比前面一个数大于1以上，那么中间的差值就必须用王来补了。看王的数量够不够，如果够就返回true，否则返回false。
+
+
+```Python
+class Solution:
+    def IsContinuous(self, numbers):
+        # 如果列表为空
+        if not numbers:
+            return numbers
+        # 将列表中大于0的元素生成新列表
+        new_list = [i for i in numbers if i > 0]
+        # 排序
+        new_list.sort()
+        # 如果新列表长度为1
+        if len(new_list) == 1:
+            return True
+        n = 0
+        # 遍历列表
+        for j in range(len(new_list) - 1):
+            # 如果后一个元素减去前一个元素大于0
+            if (new_list[j + 1] - new_list[j]) > 0:
+                # 将加入他们的差
+                n += (new_list[j + 1] - new_list[j])
+            else:
+                return False
+        if n <= 4:
+            return True
+        else:
+            return False
+```
+
+
+## 孩子们的游戏(圆圈中最后剩下的数)
+
+### 题目描述
+
+每年六一儿童节,牛客都会准备一些小礼物去看望孤儿院的小朋友,今年亦是如此。HF作为牛客的资深元老,自然也准备了一些小游戏。其中,有个游戏是这样的:首先,让小朋友们围成一个大圈。然后,他随机指定一个数m,让编号为0的小朋友开始报数。每次喊到m-1的那个小朋友要出列唱首歌,然后可以在礼品箱中任意的挑选礼物,并且不再回到圈中,从他的下一个小朋友开始,继续0...m-1报数....这样下去....直到剩下最后一个小朋友,可以不用表演,并且拿到牛客名贵的“名侦探柯南”典藏版(名额有限哦!!^_^)。请你试着想下,哪个小朋友会得到这份礼品呢？(注：小朋友的编号是从0到n-1)
+
+### 分析
+
+将n个小朋友抽象成一个成环的列表，使用取模的方式求出当前m的索引值，然后弹出该索引上的元素，返回列表中的第一个元素。
+
+
+```Python
+class Solution:
+    def LastRemaining_Solution(self, n, m):
+        if not m or not n:
+            return -1
+        # 将n个小朋友索引转为列表
+        res = range(n)
+        i = 0
+        # 当列表长度大于1
+        while len(res) > 1:
+            # 由于是环，可以用取模的方式得到m的索引
+            i = (m + i - 1) % len(res)
+            # 移除i位置的元素
+            res.pop(i)
+        # 返回第一个元素
+        return res[0]
+```
+
+
+## 矩阵中的路径
+
+### 题目描述
+
+请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，则该路径不能再进入该格子。 例如 a b c e s f c s a d e e 矩阵中包含一条字符串"bcced"的路径，但是矩阵中不包含"abcb"路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入该格子。
+
+### 分析
+
+ 首先，在矩阵中任选一个格子作为路径的起点。如果路径上的第i个字符不是ch，那么这个格子不可能处在路径上的第i个位置。如果路径上的第i个字符正好是ch，那么往相邻的格子寻找路径上的第i+1个字符。除在矩阵边界上的格子之外，其他格子都有4个相邻的格子。重复这个过程直到路径上的所有字符都在矩阵中找到相应的位置。由于回朔法的递归特性，路径可以被开成一个栈。当在矩阵中定位了路径中前n个字符的位置之后，在与第n个字符对应的格子的周围都没有找到第n+1个字符，这个时候只要在路径上回到第n-1个字符，重新定位第n个字符。由于路径不能重复进入矩阵的格子，还需要定义和字符矩阵大小一样的布尔值矩阵，用来标识路径是否已经进入每个格子。当矩阵中坐标为（row,col）的格子和路径字符串中相应的字符一样时，从4个相邻的格子(row,col-1),(row-1,col),(row,col+1)
+以及(row+1,col)中去定位路径字符串中下一个字符如果4个相邻的格子都没有匹配字符串中下一个的字符，表明当前路径字符串中字符在矩阵中的定位不正确，我们需要回到前一个，然后重新定位。一直重复这个过程，直到路径字符串上所有字符都在矩阵中找到合适的位置
+
+
+```Python
+class Solution:
+    def hasPath(self, matrix, rows, cols, path):
+        """
+        首先，在矩阵中任选一个格子作为路径的起点。如果路径上的第i个字符不是ch，那么这个格子不可能处在路径上的
+        第i个位置。如果路径上的第i个字符正好是ch，那么往相邻的格子寻找路径上的第i+1个字符。
+        除在矩阵边界上的格子之外，其他格子都有4个相邻的格子。重复这个过程直到路径上的所有字符都在矩阵中找到相应的位置。
+　　     由于回朔法的递归特性，路径可以被开成一个栈。当在矩阵中定位了路径中前n个字符的位置之后，
+        在与第n个字符对应的格子的周围都没有找到第n+1个字符，这个时候只要在路径上回到第n-1个字符，重新定位第n个字符。
+　　     由于路径不能重复进入矩阵的格子，还需要定义和字符矩阵大小一样的布尔值矩阵，用来标识路径是否已经进入每个格子。
+        当矩阵中坐标为（row,col）的格子和路径字符串中相应的字符一样时，从4个相邻的格子(row,col-1),(row-1,col),(row,col+1)
+        以及(row+1,col)中去定位路径字符串中下一个字符如果4个相邻的格子都没有匹配字符串中下一个的字符，
+        表明当前路径字符串中字符在矩阵中的定位不正确，我们需要回到前一个，然后重新定位。
+　　     一直重复这个过程，直到路径字符串上所有字符都在矩阵中找到合适的位置
+        :param matrix:
+        :param rows:
+        :param cols:
+        :param path:
+        :return:
+        """
+        # 遍历行列
+        for i in range(rows):
+            for j in range(cols):
+                # 如果矩阵中的对应元素等于路径的第一个元素
+                if matrix[i * cols + j] == path[0]:
+                    if self.find(list(matrix), rows, cols, path[1:], i, j):
+                        return True
+
+    def find(self, matrix, rows, cols, path, i, j):
+        """
+        四个方向依次递归判断
+        :param matrix:
+        :param rows:
+        :param cols:
+        :param path:
+        :param i:
+        :param j:
+        :return:
+        """
+        if not path:
+            return True
+        matrix[i * cols + j] = '0'
+        if j + 1 < cols and matrix[i * cols + (j + 1)] == path[0]:
+            return self.find(list(matrix), rows, cols, path[1:], i, j + 1)
+        elif j - 1 >= 0 and matrix[i * cols + (j - 1)] == path[0]:
+            return self.find(list(matrix), rows, cols, path[1:], i, j - 1)
+        if i + 1 < rows and matrix[(i + 1) * cols + j] == path[0]:
+            return self.find(list(matrix), rows, cols, path[1:], i + 1, j)
+        if i - 1 >= 0 and matrix[(i - 1) * cols + j] == path[0]:
+            return self.find(list(matrix), rows, cols, path[1:], i - 1, j)
+        else:
+            return False
+```
+
+
+# 机器人的运动范围
+
+### 题目描述
+
+地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？
+
+### 分析
+
+将每次遍历过的格子使用字典记录下来，编写一个递归函数，递归判断当前遍历的格子向上下左右四个方向，在递归函数中还需判断各种边界条件
+
+
+```Python
+class Solution:
+    def __init__(self):
+        # 使用一个字典存储行列为键，值为1的键值对
+        self.vis = {}
+
+    def movingCount(self, threshold, rows, cols):
+        return self.moving(threshold, rows, cols, 0, 0)
+
+    def moving(self, threshold, rows, cols, row, col):
+        # 计算行坐标和列坐标的数位之和是否大于
+        if row / 10 + row % 10 + col / 10 + col % 10 > threshold:
+            return 0
+        # 判断开始的行列是否大于总的行列
+        if row >= rows or col >= cols or row < 0 or col < 0:
+            return 0
+        # 判断行列是否在字典中
+        if (row, col) in self.vis:
+            return 0
+        # 将当前遍历的行列存入字典中
+        self.vis[(row, col)] = 1
+        # 将四个方向递归并且加上开始的第一个格子
+        return 1 + self.moving(threshold, rows, cols, row - 1, col) \
+               + self.moving(threshold, rows, cols, row + 1, col) \
+               + self.moving(threshold, rows, cols, row, col - 1) \
+               + self.moving(threshold, rows, cols, row, col + 1)
+```
+
+
 >注：
 >- 上述测试在**Python3.5**中成功
 >- 上述文字皆为个人看法，如有错误或建议请及时联系我
